@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -30,4 +32,8 @@ public class User {
     private List<Device> assignedCompanyDevices;
     private String password;
     private String avatarUrl;
+    @CreationTimestamp
+    private Date createdAt;
+    @Enumerated(EnumType.STRING)
+    private Role ruolo;
 }
