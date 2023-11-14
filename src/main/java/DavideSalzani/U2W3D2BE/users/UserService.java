@@ -3,6 +3,7 @@ package DavideSalzani.U2W3D2BE.users;
 import DavideSalzani.U2W3D2BE.exceptions.AlreadyExistException;
 import DavideSalzani.U2W3D2BE.exceptions.BadRequestException;
 import DavideSalzani.U2W3D2BE.exceptions.NotFoundException;
+import DavideSalzani.U2W3D2BE.security.JWTAuthFilter;
 import DavideSalzani.U2W3D2BE.users.userDTO.ChangeUserEmailDTO;
 import DavideSalzani.U2W3D2BE.users.userDTO.NewUserDTO;
 import com.cloudinary.Cloudinary;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +26,8 @@ public class UserService {
     private UserRepo userRepo;
     @Autowired
     private Cloudinary cloudinary;
+    @Autowired
+    private PasswordEncoder bcrypt;
 
     public User save(NewUserDTO body) throws IOException{
         User u = new User();
@@ -36,7 +40,8 @@ public class UserService {
             u.setName(body.name());
             u.setSurname(body.surname());
             u.setUsername(body.username());
-            u.setPassword(body.password());
+            u.setPassword(bcrypt.encode(body.password()));
+            u.setRuolo(Role.USER);
             userRepo.save(u);
             return u;
         }

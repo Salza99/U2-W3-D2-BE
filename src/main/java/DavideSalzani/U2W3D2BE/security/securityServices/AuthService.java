@@ -7,18 +7,20 @@ import DavideSalzani.U2W3D2BE.users.User;
 import DavideSalzani.U2W3D2BE.users.UserRepo;
 import DavideSalzani.U2W3D2BE.users.userDTO.UserLoginDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
     @Autowired
     private UserRepo usersRepo;
-
+    @Autowired
+    private PasswordEncoder bcrypt;
     @Autowired
     private JWTTools jwtTools;
     public String authenticateUser(UserLoginDTO body){
         User user = usersRepo.findByEmail(body.email()).orElseThrow(()-> new NotFoundException("User"));
-        if(body.password().equals(user.getPassword())) {
+        if(bcrypt.matches(body.password(), user.getPassword())) {
             return jwtTools.createToken(user);
         } else {
             throw new UnauthorizedException("Credenziali non valide!");

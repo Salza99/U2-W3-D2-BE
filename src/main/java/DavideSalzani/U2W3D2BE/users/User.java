@@ -30,6 +30,7 @@ public class User {
     @Cascade(value = CascadeType.ALL)
     @JsonIgnore
     private List<Device> assignedCompanyDevices;
+    @JsonIgnore
     private String password;
     private String avatarUrl;
     @CreationTimestamp
