@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestControllerAdvice
@@ -23,6 +24,12 @@ public class ExceptionsHandler {
             return new ErrorsListDTO(ex.getMessage(), LocalDate.now(), new ArrayList<>());
         }
     }
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
+    public ErrorsPayloadDTO handleUnauthorized(UnauthorizedException e){
+        return new ErrorsPayloadDTO(e.getMessage(), LocalDate.now());
+    }
+
     @ExceptionHandler(AlreadyExistException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorsPayloadDTO handleAlreadyExistException(AlreadyExistException ex){
